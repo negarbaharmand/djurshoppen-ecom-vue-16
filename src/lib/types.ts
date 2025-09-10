@@ -20,13 +20,15 @@ export interface CartItem {
   pris: number;
   kvantitet: number;
   bildUrl: string;
+  kategori: AnimalCategory;
 }
 
 export interface CartStore {
   items: CartItem[];
   addItem: (animal: Animal, storlek: AnimalSize, kvantitet: number) => void;
-  updateQuantity: (id: string, storlek: AnimalSize, kvantitet: number) => void;
-  removeItem: (id: string, storlek: AnimalSize) => void;
+  updateQuantity: (slug: string, storlek: AnimalSize, kvantitet: number) => void;
+  updateVariant: (slug: string, oldStorlek: AnimalSize, newStorlek: AnimalSize) => void;
+  removeItem: (slug: string, storlek: AnimalSize) => void;
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;

@@ -12,6 +12,7 @@ import { QuantitySelector } from '@/components/ui/quantity-selector';
 import { Price } from '@/components/ui/price';
 import { toast } from '@/hooks/use-toast';
 import { AnimalCard } from '@/components/AnimalCard';
+import { Label } from '@/components/ui/label';
 
 export default function AnimalDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -173,15 +174,19 @@ export default function AnimalDetail() {
               <Price amount={selectedPrice} />
             </div>
 
-            {/* Size Selection */}
-            <div className="space-y-3">
-              <h3 className="font-semibold">Välj storlek:</h3>
-              <SizeSelector
-                sizes={availableSizes}
-                selectedSize={selectedSize}
-                onSizeChange={setSelectedSize}
-              />
-            </div>
+        {/* Size Selection */}
+        <div className="space-y-3">
+          <Label htmlFor={`size-${animal.slug}`} className="font-semibold">
+            Välj storlek:
+          </Label>
+          <div role="group" aria-labelledby={`size-${animal.slug}`}>
+            <SizeSelector
+              sizes={availableSizes}
+              selectedSize={selectedSize}
+              onSizeChange={setSelectedSize}
+            />
+          </div>
+        </div>
 
             {/* Stock Status */}
             <div>
@@ -191,46 +196,62 @@ export default function AnimalDetail() {
               </Badge>
             </div>
 
-            {/* Quantity Selection */}
-            {selectedStock > 0 && (
-              <div className="space-y-3">
-                <h3 className="font-semibold">Kvantitet:</h3>
-                <QuantitySelector
-                  value={quantity}
-                  max={Math.min(selectedStock, 10)}
-                  onChange={setQuantity}
-                />
-              </div>
-            )}
-
-            {/* Add to Cart */}
-            <div className="space-y-4">
-              <Button
-                size="lg"
-                className="w-full"
-                onClick={handleAddToCart}
-                disabled={selectedStock === 0 || isAdding}
-              >
-                {isAdding ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                    Lägger till...
-                  </>
-                ) : selectedStock === 0 ? (
-                  'Ej tillgänglig'
-                ) : (
-                  <>
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    Lägg i varukorg
-                  </>
-                )}
-              </Button>
-
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Check className="h-4 w-4 text-green-600" />
-                Fri frakt över 500 kr
-              </div>
+        {/* Quantity Selection */}
+        {selectedStock > 0 && (
+          <div className="space-y-3">
+            <Label htmlFor={`quantity-${animal.slug}`} className="font-semibold">
+              Kvantitet:
+            </Label>
+            <div role="group" aria-labelledby={`quantity-${animal.slug}`}>
+              <QuantitySelector
+                value={quantity}
+                max={Math.min(selectedStock, 10)}
+                onChange={setQuantity}
+              />
             </div>
+            {selectedStock <= 5 && selectedStock > 0 && (
+              <p className="text-sm text-orange-600">
+                Endast {selectedStock} kvar i lager
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Add to Cart */}
+        <div className="space-y-4">
+          <Button
+            size="lg"
+            className="w-full"
+            onClick={handleAddToCart}
+            disabled={selectedStock === 0 || isAdding}
+            aria-describedby={selectedStock === 0 ? `${animal.slug}-out-of-stock` : undefined}
+          >
+            {isAdding ? (
+              <>
+                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" aria-hidden="true" />
+                Lägger till...
+              </>
+            ) : selectedStock === 0 ? (
+              'Ej tillgänglig'
+            ) : (
+              <>
+                <ShoppingCart className="mr-2 h-4 w-4" aria-hidden="true" />
+                Lägg i varukorg
+              </>
+            )}
+          </Button>
+
+          {selectedStock === 0 && (
+            <div id={`${animal.slug}-out-of-stock`} className="text-sm text-destructive">
+              Detta djur är för tillfället slut i lager i vald storlek
+            </div>
+          )}
+
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Check className="h-4 w-4 text-green-600" aria-hidden="true" />
+            Fri frakt över 500 kr
+          </div>
+        </div>
           </div>
         </div>
 

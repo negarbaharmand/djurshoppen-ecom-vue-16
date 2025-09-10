@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Animals from "./pages/Animals";
 import AnimalDetail from "./pages/AnimalDetail";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,7 +28,7 @@ const App = () => (
               <Route path="/djur" element={<Animals />} />
               <Route path="/djur/:slug" element={<AnimalDetail />} />
               <Route path="/varukorg" element={<Cart />} />
-              {/* TODO: Add route for /kassa */}
+              <Route path="/kassa" element={<Checkout />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

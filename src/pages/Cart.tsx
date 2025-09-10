@@ -14,7 +14,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 
 export default function Cart() {
   const navigate = useNavigate();
-  const { items, updateQuantity, removeItem, clearCart, getTotalPrice } = useCartStore();
+  const { items, updateQuantity, updateVariant, removeItem, clearCart, getTotalPrice } = useCartStore();
 
   if (items.length === 0) {
     return (
@@ -38,19 +38,19 @@ export default function Cart() {
   const shipping = subtotal >= 500 ? 0 : 99; // Fri frakt över 500 kr
   const total = subtotal + shipping;
 
-  const handleQuantityChange = (id: string, storlek: AnimalSize, newQuantity: number) => {
+  const handleQuantityChange = (slug: string, storlek: AnimalSize, newQuantity: number) => {
     if (newQuantity === 0) {
-      removeItem(id, storlek);
+      removeItem(slug, storlek);
     } else {
-      updateQuantity(id, storlek, newQuantity);
+      updateQuantity(slug, storlek, newQuantity);
     }
   };
 
-  const handleSizeChange = (id: string, oldSize: AnimalSize, newSize: AnimalSize) => {
-    const item = items.find(item => item.id === id && item.storlek === oldSize);
+  const handleSizeChange = (slug: string, oldSize: AnimalSize, newSize: AnimalSize) => {
+    const item = items.find(item => item.slug === slug && item.storlek === oldSize);
     if (!item) return;
 
-    const animal = animals.find(a => a.id === id);
+    const animal = animals.find(a => a.slug === slug);
     if (!animal) return;
 
     // Check if new size has enough stock
@@ -59,12 +59,11 @@ export default function Cart() {
       const maxQuantity = animal.lager[newSize];
       if (maxQuantity === 0) return; // Don't change if no stock
       
-      removeItem(id, oldSize);
-      updateQuantity(id, newSize, maxQuantity);
+      removeItem(slug, oldSize);
+      updateQuantity(slug, newSize, maxQuantity);
     } else {
-      // Remove old size and add new size with same quantity
-      removeItem(id, oldSize);
-      updateQuantity(id, newSize, item.kvantitet);
+      // Use the updateVariant function from store
+      updateVariant(slug, oldSize, newSize);
     }
   };
 
@@ -99,15 +98,15 @@ export default function Cart() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
-            {items.map((item) => {
-              const animal = animals.find(a => a.id === item.id);
-              const availableSizes = animal 
-                ? (['S', 'M', 'L'] as AnimalSize[]).filter(size => animal.lager[size] > 0)
-                : [item.storlek];
-              const maxQuantity = animal ? Math.min(animal.lager[item.storlek], 10) : item.kvantitet;
+          {items.map((item) => {
+            const animal = animals.find(a => a.slug === item.slug);
+            const availableSizes = animal 
+              ? (['S', 'M', 'L'] as AnimalSize[]).filter(size => animal.lager[size] > 0)
+              : [item.storlek];
+            const maxQuantity = animal ? Math.min(animal.lager[item.storlek], 10) : item.kvantitet;
 
-              return (
-                <Card key={`${item.id}-${item.storlek}`}>
+            return (
+              <Card key={`${item.slug}-${item.storlek}`}>
                   <CardContent className="p-6">
                     <div className="flex gap-4">
                       {/* Image */}
@@ -139,20 +138,24 @@ export default function Cart() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => removeItem(item.id, item.storlek)}
+                            onClick={() => removeItem(item.slug, item.storlek)}
                             className="text-destructive hover:text-destructive"
+                            aria-label={`Ta bort ${item.namn} från varukorgen`}
                           >
                             <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Ta bort</span>
+                            <span className="sr-only">Ta bort {item.namn}</span>
                           </Button>
                         </div>
 
                         {/* Size selector */}
                         <div className="mb-3">
+                          <label className="text-sm font-medium mb-1 block">
+                            Storlek:
+                          </label>
                           <SizeSelector
                             sizes={availableSizes}
                             selectedSize={item.storlek}
-                            onSizeChange={(newSize) => handleSizeChange(item.id, item.storlek, newSize)}
+                            onSizeChange={(newSize) => handleSizeChange(item.slug, item.storlek, newSize)}
                           />
                         </div>
 
@@ -163,13 +166,14 @@ export default function Cart() {
                               variant="outline"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => handleQuantityChange(item.id, item.storlek, item.kvantitet - 1)}
+                              onClick={() => handleQuantityChange(item.slug, item.storlek, item.kvantitet - 1)}
                               disabled={item.kvantitet <= 1}
+                              aria-label={`Minska kvantitet för ${item.namn}`}
                             >
                               <Minus className="h-3 w-3" />
                             </Button>
                             
-                            <span className="w-8 text-center font-medium">
+                            <span className="w-8 text-center font-medium" aria-label={`Kvantitet: ${item.kvantitet}`}>
                               {item.kvantitet}
                             </span>
                             
@@ -177,8 +181,9 @@ export default function Cart() {
                               variant="outline"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => handleQuantityChange(item.id, item.storlek, item.kvantitet + 1)}
+                              onClick={() => handleQuantityChange(item.slug, item.storlek, item.kvantitet + 1)}
                               disabled={item.kvantitet >= maxQuantity}
+                              aria-label={`Öka kvantitet för ${item.namn}`}
                             >
                               <Plus className="h-3 w-3" />
                             </Button>
