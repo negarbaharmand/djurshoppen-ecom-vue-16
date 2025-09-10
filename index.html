@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Djurshoppen – Köp exotiska och vanliga djur online</title>
+    <meta name="description" content="Köp exotiska och vanliga djur online på Djurshoppen. Från katter och hundar till lejon och elefanter. Trygg betalning, snabb leverans och professionell service." />
+    <meta name="author" content="Djurshoppen" />
+    <meta name="keywords" content="djur, husdjur, exotiska djur, köp djur online, katt, hund, papegoja, lejon, elefant" />
+
+    <meta property="og:title" content="Djurshoppen – Köp exotiska och vanliga djur online" />
+    <meta property="og:description" content="Köp exotiska och vanliga djur online på Djurshoppen. Från katter och hundar till lejon och elefanter. Trygg betalning, snabb leverans och professionell service." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Strukturerad data för SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://djurshoppen.se/#organization",
+          "name": "Djurshoppen",
+          "url": "https://djurshoppen.se/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://djurshoppen.se/logo.png"
+          },
+          "description": "Sveriges ledande onlinebutik för exotiska och vanliga djur",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+46-8-123-456",
+            "contactType": "Kundservice",
+            "availableLanguage": "Swedish"
+          },
+          "sameAs": [
+            "https://facebook.com/djurshoppen",
+            "https://instagram.com/djurshoppen"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://djurshoppen.se/#website",
+          "url": "https://djurshoppen.se/",
+          "name": "Djurshoppen",
+          "description": "Köp exotiska och vanliga djur online",
+          "publisher": {
+            "@id": "https://djurshoppen.se/#organization"
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://djurshoppen.se/djur?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hem",
+              "item": "https://djurshoppen.se/"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+  </body>
+</html>
