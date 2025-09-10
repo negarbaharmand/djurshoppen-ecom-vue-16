@@ -7,6 +7,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import Home from "./pages/Home";
 import Animals from "./pages/Animals";
+import AnimalDetail from "./pages/AnimalDetail";
+import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,7 +25,9 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/djur" element={<Animals />} />
-              {/* TODO: Add routes for /djur/[slug], /varukorg, /kassa */}
+              <Route path="/djur/:slug" element={<AnimalDetail />} />
+              <Route path="/varukorg" element={<Cart />} />
+              {/* TODO: Add route for /kassa */}
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
