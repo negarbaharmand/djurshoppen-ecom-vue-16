@@ -3,6 +3,7 @@
 ## Project info
 
 **URL**: https://lovable.dev/projects/70a099f1-fd45-4fe2-87cc-2e34fea6a657
+**Published Website**: https://djurshoppen-ecom-vue-16.lovable.app
 
 ## How can I edit this code?
 
